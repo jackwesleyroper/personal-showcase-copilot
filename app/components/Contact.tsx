@@ -25,10 +25,14 @@ export default function Contact() {
       // 2. Set up a service (e.g. Gmail) and note your Service ID
       // 3. Create an email template and note your Template ID
       // 4. Copy your Public Key from Account > API Keys
-      // 5. Replace the placeholder values below with your real credentials
-      const EMAILJS_SERVICE_ID = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID ?? "YOUR_SERVICE_ID";
-      const EMAILJS_TEMPLATE_ID = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID ?? "YOUR_TEMPLATE_ID";
-      const EMAILJS_PUBLIC_KEY = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY ?? "YOUR_PUBLIC_KEY";
+      // 5. Add credentials to .env.local (see .env.local.example)
+      const EMAILJS_SERVICE_ID = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID;
+      const EMAILJS_TEMPLATE_ID = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID;
+      const EMAILJS_PUBLIC_KEY = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY;
+
+      if (!EMAILJS_SERVICE_ID || !EMAILJS_TEMPLATE_ID || !EMAILJS_PUBLIC_KEY) {
+        throw new Error("EmailJS credentials are not configured.");
+      }
 
       const { send } = await import("@emailjs/browser");
       await send(
@@ -190,7 +194,15 @@ export default function Contact() {
 
               {formState === "error" && (
                 <p className="text-xs text-red-400">
-                  Something went wrong. Please try again or email me directly.
+                  Something went wrong. Please{" "}
+                  <a
+                    href="mailto:jackwesleyroper@gmail.com"
+                    className="underline underline-offset-2 hover:text-red-300"
+                  >
+                    email me directly
+                  </a>{" "}
+                  or check the EmailJS setup in{" "}
+                  <code className="font-mono">.env.local</code>.
                 </p>
               )}
 
